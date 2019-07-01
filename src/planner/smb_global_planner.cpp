@@ -173,7 +173,7 @@ bool SmbGlobalPlanner::plannerServiceCallback(
   // Else: we can set the goal to the service request value
   goal_ << req.goal_pose.pose.position.x, req.goal_pose.pose.position.y,
       params_.planning_height;
-
+  
   // Check that we are not in the goal position. If we are, avoid planning!
   if ((goal_.head<2>() - current_state_.head<2>()).norm() <
       2.0 * params_.voxel_size) {
@@ -181,7 +181,9 @@ bool SmbGlobalPlanner::plannerServiceCallback(
              "Abort planning.");
     return false;
   }
-
+  res.x=current_state_(0);
+  res.y=current_state_(1);
+  res.th=current_state_(2);
   // Set the start pose
   Eigen::Vector3d start(current_state_(0), current_state_(1),
                         params_.planning_height);
