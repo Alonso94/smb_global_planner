@@ -12,3 +12,10 @@ float64 x
 float64 y
 float64 th
 ```
+
+And in "__src/planner/smb_global_planner.cpp__" add the following starting from 184 line
+```$xslt
+  res.x=current_state_(0);
+  res.y=current_state_(1);
+  res.th=current_state_(2);
+```
