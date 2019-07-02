@@ -278,6 +278,7 @@ bool SmbGlobalPlanner::plannerServiceCallback(
 
   // Update check variable that will fire the planner
   perform_planning_ = true;
+  res.success = true;
   return res.success;
 }
 

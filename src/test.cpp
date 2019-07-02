@@ -17,34 +17,36 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "test_node");
-    ros::Duration(40.0).sleep();
-    vector<geometry_msgs::PoseStamped> way_points;
-    geometry_msgs::PoseStamped goalpose;
     // waypoints
-    vector<double> x={-16.0,-16.0,-13.0,-21.0,-3.0};
-    vector<double> y={54.0,45.0,63.0,63.0,54.0};
+    //vector<double> x={-16.0,-16.0,-13.0,-21.0,-3.0};
+    //vector<double> y={54.0,45.0,63.0,63.0,54.0};
     // test
     //vector<double> x={-13.0,-2.0,-9.0};
     //vector<double> y={10.0,19.0,0.0};
-    for(int i=0;i<x.size();i++){
-        goalpose.pose.position.x=0.0;
-        goalpose.pose.position.y=0.0;
-        way_points.push_back(goalpose);
-    }
+    vector<double> x={13.0};
+    vector<double> y={0.0};
+
+    ros::init(argc, argv, "test_node");
     ros::NodeHandle n;
+    ros::Time::init();
+    printf("node initialized _ wait 10 sec\n");
+    ros::Duration(10.0).sleep();
+
     ros::ServiceClient client = n.serviceClient<smb_planner_msgs::PlannerService>("/compute_global_path");
     smb_planner_msgs::PlannerService srv;
-    ros::Publisher traj_pub=n.advertise<nav_msgs::Path>("/mpc_trajectories",1);
+    ros::Publisher traj_pub=n.advertise<nav_msgs::Path>("/mpc_trajectory",1);
     nav_msgs::Path path;
+
     geometry_msgs::PoseStamped pose;
-    path.header.stamp=ros::Time::now();
     double time=0.0;
     ros::Time t=ros::Time(time);
+    path.header.stamp=ros::Time::now();
     path.header.frame_id="map";
     double x_r,y_r,th_r;
     for(int i=0;i<x.size();++i){
-        srv.request.goal_pose=way_points[i];
+        printf("point #%d \n",i);
+        srv.request.goal_pose.pose.position.x=x[i];
+        srv.request.goal_pose.pose.position.y=y[i];
         if (client.call(srv)){
             if(srv.response.success==false)
                 printf("point #%d is unreachable\n",i);
@@ -55,6 +57,7 @@ int main(int argc, char **argv)
             continue;
         }
         ros::Duration(40.0).sleep();
+        printf("rotation\n");
         x_r=srv.response.x;
         y_r=srv.response.y;
         th_r=srv.response.th;

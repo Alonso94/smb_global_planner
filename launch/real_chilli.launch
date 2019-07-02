@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+	<include file="$(find smb_lpc)/launch/lpc.launch"/>
+	<include file="$(find ethzasl_icp_mapper)/launch/supermegabot/supermegabot_robosence_dynamic_mapper.launch"/> 
+	<include file="$(find smb_local_planner)/launch/smb_planner_real.launch"/>
+
+	<node name="test_node" pkg="smb_global_planner" type="test_node"/>
+ 
+</launch>
