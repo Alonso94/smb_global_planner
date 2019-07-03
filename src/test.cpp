@@ -9,7 +9,7 @@
 #include <Eigen/Geometry>
 #include <tf/tf.h>
 #include <tf/transform_datatypes.h>
-
+#include <std_srvs/Empty.h>
 #include <vector>
 
 using namespace std;
@@ -33,7 +33,9 @@ int main(int argc, char **argv)
     ros::Duration(10.0).sleep();
 
     ros::ServiceClient client = n.serviceClient<smb_planner_msgs::PlannerService>("/compute_global_path");
+    ros::ServiceClient trig = n.serviceClient<std_srvs::Empty>("/trigger_local_planner");
     smb_planner_msgs::PlannerService srv;
+    std_srvs::Empty trig_srv;
     ros::Publisher traj_pub=n.advertise<nav_msgs::Path>("/mpc_trajectory",1);
     nav_msgs::Path path;
 
@@ -56,6 +58,7 @@ int main(int argc, char **argv)
             printf("Service call failed\n");
             continue;
         }
+        trig.call(trig_srv);
         ros::Duration(40.0).sleep();
         printf("rotation\n");
         x_r=srv.response.x;
