@@ -21,6 +21,6 @@ And in "__src/planner/smb_global_planner.cpp__" add the following starting from 
 ```
 ---
 This package is a modified part of __smb_path_planner__ </br>
-Author: Luca Bartolomei
-Affiliation: Vision For Robotics Lab, ETH Zurich
-Contact: Luca Bartolomei, lbartolomei@ethz.ch
+Author: Luca Bartolomei</br>
+Affiliation: Vision For Robotics Lab, ETH Zurich</br>
+Contact: Luca Bartolomei, lbartolomei@ethz.ch</br>
