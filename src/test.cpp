@@ -23,8 +23,8 @@ int main(int argc, char **argv)
     // test
     //vector<double> x={-13.0,-2.0,-9.0};
     //vector<double> y={10.0,19.0,0.0};
-    vector<double> x={13.0};
-    vector<double> y={0.0};
+    vector<double> x={0.0,6.0,2.2,0.0};
+    vector<double> y={0.0,0.0,2.0,0.0};
 
     ros::init(argc, argv, "test_node");
     ros::NodeHandle n;
@@ -33,9 +33,9 @@ int main(int argc, char **argv)
     ros::Duration(10.0).sleep();
 
     ros::ServiceClient client = n.serviceClient<smb_planner_msgs::PlannerService>("/compute_global_path");
-    ros::ServiceClient trig = n.serviceClient<std_srvs::Empty>("/trigger_local_planner");
+//    ros::ServiceClient trig = n.serviceClient<std_srvs::Empty>("/trigger_local_planner");
     smb_planner_msgs::PlannerService srv;
-    std_srvs::Empty trig_srv;
+//    std_srvs::Empty trig_srv;
     ros::Publisher traj_pub=n.advertise<nav_msgs::Path>("/mpc_trajectory",1);
     nav_msgs::Path path;
 
@@ -50,17 +50,19 @@ int main(int argc, char **argv)
         srv.request.goal_pose.pose.position.x=x[i];
         srv.request.goal_pose.pose.position.y=y[i];
         if (client.call(srv)){
+                    ros::Duration(80.0).sleep();
             if(srv.response.success==false)
                 printf("point #%d is unreachable\n",i);
-                continue;
+                //continue;
         }
         else{
             printf("Service call failed\n");
             continue;
         }
-        trig.call(trig_srv);
-        ros::Duration(40.0).sleep();
+//        trig.call(trig_srv);
+        ros::Duration(80.0).sleep();
         printf("rotation\n");
+        client.call(srv);
         x_r=srv.response.x;
         y_r=srv.response.y;
         th_r=srv.response.th;
